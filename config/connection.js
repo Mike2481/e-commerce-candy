@@ -1,4 +1,5 @@
 require('dotenv').config();
+// brings in environment variable containing username and password that are then used in starting the db
 
 const Sequelize = require('sequelize');
 

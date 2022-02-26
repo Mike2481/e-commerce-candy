@@ -1,9 +1,10 @@
+// import Model to extend off of and bring in DataTypes for column definitions
 const { Model, DataTypes } = require('sequelize');
-
+// import our database connection from config.js
 const sequelize = require('../config/connection.js');
-
+// Initialize Category model (table) by extending off Sequelize's Model class
 class Category extends Model {}
-
+// class
 Category.init(
   {
     // define columns
@@ -21,9 +22,9 @@ Category.init(
   {
     sequelize,
     timestamps: false,
-    freezeTableName: true,
+    freezeTableName: true, // keep from making plural
     underscored: true,
-    modelName: 'category',
+    modelName: 'category', // assigns name for use in other files
   }
 );
 

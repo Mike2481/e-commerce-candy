@@ -36,7 +36,7 @@ router.get("/:id", (req, res) => {
       id: req.params.id,
     },
     attributes: ["id", "product_name", "price", "stock", "category_id"],
-    include: [
+    include: [ // join with Category and Tag tables
       {
         model: Category,
         attributes: ["category_name"],
@@ -56,13 +56,9 @@ router.post("/", (req, res) => {
     product_name: req.body.product_name,
     price: req.body.price,
     stock: req.body.stock,
+    category_id: req.body.category_id,
     tagIds: req.body.tagIds,
   })
-    .then((productData) => res.json(productData))
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json(err);
-    });
   /* req.body should look like this...
 
     {
@@ -72,10 +68,10 @@ router.post("/", (req, res) => {
       tagIds: [1, 2, 3, 4]
     }
   */
-  Product.create(req.body)
+  // Product.create(req.body)
     .then((product) => {
       // if there's product tags, we need to create pairings to bulk create in the ProductTag model
-      if (req.body.tagIds.length) {
+      if (req.body.tagIds) {
         const productTagIdArr = req.body.tagIds.map((tag_id) => {
           return {
             product_id: product.id,
@@ -138,6 +134,17 @@ router.put("/:id", (req, res) => {
 
 router.delete("/:id", (req, res) => {
   // delete one product by its `id` value
+  Product.destroy({
+    where: {
+      id: req.params.id,
+    },
+  }).then((productTagIds) => {
+    if (!productTagIds) {
+      res.status(404).json({ message: "No Category by that id" });
+      return;
+    }
+    res.json(productTagIds);
+  });
 });
 
 module.exports = router;

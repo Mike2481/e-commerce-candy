@@ -1,7 +1,7 @@
 const { Model, DataTypes } = require('sequelize');
-
+// import our database connection from config.js
 const sequelize = require('../config/connection');
-
+// Initialize ProductTag model (table) by extending off Sequelize's Model class
 class ProductTag extends Model {}
 
 ProductTag.init(
@@ -14,14 +14,14 @@ ProductTag.init(
       autoIncrement: true,
     },
     product_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.INTEGER,  // helps to assign many to many relationship
       references: {
         model: 'product',
         key: 'id'
       }
     },
     tag_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.INTEGER, // helps to assign many to many relationship
       references: {
         model: 'tag',
         key: 'id'

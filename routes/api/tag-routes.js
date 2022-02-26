@@ -6,7 +6,7 @@ const { Tag, Product, ProductTag } = require("../../models");
 router.get("/", (req, res) => {
   // find all tags
   Tag.findAll({
-    attributes: { tagName },
+    attributes: ["tag_name"],
     include: [
       {
         model: Product,
@@ -24,11 +24,15 @@ router.get("/:id", (req, res) => {
     where: {
       id: req.params.id,
     },
-    attributes: { tagName },
-    include: [
+    attributes: ["tag_name", "id"],
+    include: [ // join with Product and ProductTag tables
       {
         model: Product,
         attributes: ["id", "product_name", "price", "stock", "category_id"],
+      },
+      {
+        model: ProductTag,
+        attributes: ["tag_id"],
       },
     ],
   });
@@ -44,16 +48,22 @@ router.post("/", (req, res) => {
 
 router.put("/:id", (req, res) => {
   // update a tag's name by its `id` value
-  Tag.update(
-    {
-      tag_name: req.body.tag_name,
-    },
-    {
-      where: {
-        id: req.params.id,
-      },
+  Tag.update(req.body, {
+    where: {
+        id: req.params.id
     }
-  );
+  })
+    .then(dbTagData => {
+        if (!dbTagData[0]) {
+            res.status(404).json({ message: 'No tag found with this id'});
+            return;
+        }
+        res.json(dbTagData);
+  })
+    .catch(err => {
+        console.log(err); 
+        res.status(500).json(err);
+  });
 });
 
 router.delete("/:id", (req, res) => {

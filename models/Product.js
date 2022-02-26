@@ -13,6 +13,7 @@ Product.init(
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      onDelete: 'cascade', // deletes when parent is deleted
       primaryKey: true,
       autoIncrement: true,
     },

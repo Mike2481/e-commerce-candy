@@ -1,3 +1,5 @@
+// bring in all routes to use for endpoints
+
 const router = require('express').Router();
 const categoryRoutes = require('./category-routes');
 const productRoutes = require('./product-routes');
